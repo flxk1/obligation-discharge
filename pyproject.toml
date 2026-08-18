@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "obligation-discharge"
+version = "0.1.0"
+description = "Decide whether an enforcement point may act on a permit that carries duties, and whether those duties were later performed."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "flxk1" }]
+keywords = ["authorization", "policy", "obligations", "xacml", "pep", "governance"]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+obligation_discharge = ["py.typed"]

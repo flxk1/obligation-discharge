@@ -1,0 +1,120 @@
+{
+  "version": "0.1.0",
+  "note": "Vectors are the specification. An implementation in any language that reproduces these verdicts is conformant. Construction is positional where the API is positional, so a field inserted mid-dataclass fails here even when every keyword-using test passes.",
+  "admit": [
+    {"name": "supported duty is accepted",
+     "obligations": [["o1", "urn:log", true, 60]],
+     "supports": ["urn:log"], "unsupported": [],
+     "expect": {"status": "ADMISSIBLE", "verdicts": ["ACCEPTED"]}},
+
+    {"name": "declared inability denies a mandatory duty",
+     "obligations": [["o1", "urn:notify", true, null]],
+     "supports": [], "unsupported": ["urn:notify"],
+     "expect": {"status": "MUST_DENY", "verdicts": ["REFUSED"]}},
+
+    {"name": "silence denies a mandatory duty",
+     "obligations": [["o1", "urn:notify", true, null]],
+     "supports": [], "unsupported": [],
+     "expect": {"status": "MUST_DENY", "verdicts": ["UNDECLARED"]}},
+
+    {"name": "silence drops advice without denying",
+     "obligations": [["o1", "urn:mask", false, null]],
+     "supports": [], "unsupported": [],
+     "expect": {"status": "ADMISSIBLE", "verdicts": ["DROPPED"]}},
+
+    {"name": "declared inability drops advice without denying",
+     "obligations": [["o1", "urn:mask", false, null]],
+     "supports": [], "unsupported": ["urn:mask"],
+     "expect": {"status": "ADMISSIBLE", "verdicts": ["DROPPED"]}},
+
+    {"name": "a contradictory declaration states nothing",
+     "obligations": [["o1", "urn:log", true, null]],
+     "supports": ["urn:log"], "unsupported": ["urn:log"],
+     "expect": {"status": "MUST_DENY", "verdicts": ["UNDECLARED"]}},
+
+    {"name": "one undischargeable duty denies the whole decision",
+     "obligations": [["a", "urn:log", true, null], ["b", "urn:notify", true, null]],
+     "supports": ["urn:log"], "unsupported": [],
+     "expect": {"status": "MUST_DENY", "verdicts": ["ACCEPTED", "UNDECLARED"]}},
+
+    {"name": "no obligations at all is admissible",
+     "obligations": [], "supports": [], "unsupported": [],
+     "expect": {"status": "ADMISSIBLE", "verdicts": []}},
+
+    {"name": "an absent obligation list is undetermined, not permissive",
+     "obligations": null, "supports": ["urn:log"], "unsupported": [],
+     "expect": {"status": "UNDETERMINED", "verdicts": []}}
+  ],
+  "settle": [
+    {"name": "discharged within the deadline",
+     "obligations": [["o1", "urn:log", true, 60]], "supports": ["urn:log"],
+     "discharges": [["o1", "2026-03-01T10:00:30Z"]],
+     "decided_at": "2026-03-01T10:00:00Z", "now": "2026-03-01T11:00:00Z",
+     "expect": {"status": "SETTLED", "verdicts": ["DISCHARGED"]}},
+
+    {"name": "the deadline is inclusive at its final second",
+     "obligations": [["o1", "urn:log", true, 60]], "supports": ["urn:log"],
+     "discharges": [["o1", "2026-03-01T10:01:00Z"]],
+     "decided_at": "2026-03-01T10:00:00Z", "now": "2026-03-01T11:00:00Z",
+     "expect": {"status": "SETTLED", "verdicts": ["DISCHARGED"]}},
+
+    {"name": "a late discharge is never clean",
+     "obligations": [["o1", "urn:log", true, 60]], "supports": ["urn:log"],
+     "discharges": [["o1", "2026-03-01T10:01:30Z"]],
+     "decided_at": "2026-03-01T10:00:00Z", "now": "2026-03-01T11:00:00Z",
+     "expect": {"status": "LATE", "verdicts": ["DISCHARGED_LATE"]}},
+
+    {"name": "undone and past due is overdue",
+     "obligations": [["o1", "urn:log", true, 60]], "supports": ["urn:log"],
+     "discharges": [],
+     "decided_at": "2026-03-01T10:00:00Z", "now": "2026-03-01T11:00:00Z",
+     "expect": {"status": "LATE", "verdicts": ["OVERDUE"]}},
+
+    {"name": "undone and not yet due is outstanding",
+     "obligations": [["o1", "urn:log", true, 600]], "supports": ["urn:log"],
+     "discharges": [],
+     "decided_at": "2026-03-01T10:00:00Z", "now": "2026-03-01T10:01:00Z",
+     "expect": {"status": "OUTSTANDING", "verdicts": ["PENDING"]}},
+
+    {"name": "a duty with no deadline can never fall due",
+     "obligations": [["o1", "urn:notify", true, null]], "supports": ["urn:notify"],
+     "discharges": [],
+     "decided_at": "2026-03-01T10:00:00Z", "now": "2099-01-01T00:00:00Z",
+     "expect": {"status": "OUTSTANDING", "verdicts": ["PENDING"]}},
+
+    {"name": "the earliest discharge decides, whatever the order",
+     "obligations": [["o1", "urn:log", true, 60]], "supports": ["urn:log"],
+     "discharges": [["o1", "2026-03-01T10:05:00Z"], ["o1", "2026-03-01T10:00:30Z"]],
+     "decided_at": "2026-03-01T10:00:00Z", "now": "2026-03-01T11:00:00Z",
+     "expect": {"status": "SETTLED", "verdicts": ["DISCHARGED"]}},
+
+    {"name": "no discharge record is unsettled, not clean",
+     "obligations": [["o1", "urn:log", true, 60]], "supports": ["urn:log"],
+     "discharges": null,
+     "decided_at": "2026-03-01T10:00:00Z", "now": "2026-03-01T11:00:00Z",
+     "expect": {"status": "UNSETTLED", "verdicts": []}},
+
+    {"name": "a dropped advisory was never owed and settles nothing",
+     "obligations": [["o1", "urn:mask", false, null]], "supports": [],
+     "discharges": [],
+     "decided_at": "2026-03-01T10:00:00Z", "now": "2026-03-01T11:00:00Z",
+     "expect": {"status": "SETTLED", "verdicts": []}},
+
+    {"name": "a naive timestamp is read as UTC rather than crashing",
+     "obligations": [["o1", "urn:log", true, 60]], "supports": ["urn:log"],
+     "discharges": [["o1", "2026-03-01T10:00:30"]],
+     "decided_at": "2026-03-01T10:00:00Z", "now": "2026-03-01T11:00:00Z",
+     "expect": {"status": "SETTLED", "verdicts": ["DISCHARGED"]}}
+  ],
+  "fitness": [
+    {"name": "names what the enforcement point cannot carry",
+     "types": ["urn:log", "urn:notify", "urn:mask"],
+     "supports": ["urn:log"], "unsupported": ["urn:notify"],
+     "expect": {"fit": false, "supported": ["urn:log"],
+                "refused": ["urn:notify"], "undeclared": ["urn:mask"]}},
+    {"name": "fit only when nothing is refused and nothing unspoken",
+     "types": ["urn:log"], "supports": ["urn:log"], "unsupported": [],
+     "expect": {"fit": true, "supported": ["urn:log"],
+                "refused": [], "undeclared": []}}
+  ]
+}

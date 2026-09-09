@@ -37,7 +37,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from enum import Enum
 
-__version__ = "0.1.0"
+from ._version import __version__
 
 __all__ = [
     "__version__",

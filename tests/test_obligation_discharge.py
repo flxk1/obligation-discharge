@@ -272,10 +272,9 @@ class TestDoctrine(unittest.TestCase):
                          ["obligation_id", "at"])
 
     def test_version_matches_packaging(self):
-        import pathlib, re
+        import importlib.metadata
         import obligation_discharge as od
-        toml = (pathlib.Path(__file__).resolve().parents[1] / "pyproject.toml").read_text()
-        declared = re.search(r'^version = "([^"]+)"', toml, re.M).group(1)
+        declared = importlib.metadata.version("obligation-discharge")
         self.assertEqual(od.__version__, declared)
 
 

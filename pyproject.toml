@@ -4,20 +4,28 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "obligation-discharge"
-version = "0.1.0"
 description = "Decide whether an enforcement point may act on a permit that carries duties, and whether those duties were later performed."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
+license-files = ["LICENSES/*", "NOTICE"]
 authors = [{ name = "flxk1" }]
 keywords = ["authorization", "policy", "obligations", "xacml", "pep", "governance"]
 dependencies = []
+dynamic = ["version"]
 
 [project.optional-dependencies]
 test = ["pytest>=7"]
+
+[tool.setuptools.dynamic]
+version = { attr = "obligation_discharge._version.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 obligation_discharge = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

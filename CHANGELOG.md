@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Repository laid out on the measure skeleton: `LICENSES/MIT.txt` + `NOTICE` + `REUSE.toml` replace the bare `LICENSE`; `MANIFEST.in` dropped; version single-sourced from `src/obligation_discharge/_version.py`; CI workflow and release-please config added.
+
 ## 0.1.0
 
 First release.

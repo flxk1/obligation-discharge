@@ -2,6 +2,10 @@
 
 Two decisions over a permit carrying duties: may an enforcement point act on it, and were the attached duties discharged on time.
 
+## Problem
+
+A permit with attached duties is treated as a plain permit. Decides admission and, later, whether the duties were discharged.
+
 ## Install
 
 `pip install git+https://github.com/flxk1/obligation-discharge`
@@ -12,6 +16,13 @@ Two decisions over a permit carrying duties: may an enforcement point act on it,
 decided = admit(duties, Declaration("api-gateway", supports={"urn:log:access"}))
 settled = settle(decided, [Discharge("ob-1", "2026-03-01T10:01:30Z")], decided_at=t0, now=t1)
 decided.may_permit, settled.status.name   # True LATE
+```
+
+## Example
+
+```
+in : admit([Obligation("log-access", "audit", mandatory=True, deadline_s=60)], Declaration("api-gateway", supports=frozenset({"audit"})))
+out: decided.status, decided.may_permit → AdmissionStatus.ADMISSIBLE True
 ```
 
 ## Interface

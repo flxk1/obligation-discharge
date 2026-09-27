@@ -28,7 +28,7 @@ out: decided.status, decided.may_permit → AdmissionStatus.ADMISSIBLE True
 ## Interface
 
 - `admit(obligations, declaration) -> Admitted(status, may_permit, blocking, owed)`; per duty ACCEPTED, REFUSED, UNDECLARED, DROPPED; mandatory REFUSED/UNDECLARED yields MUST_DENY; `None` -> UNDETERMINED
-- `settle(admitted, discharges, *, decided_at, now) -> Settled(status, ok, outstanding, late, unmatched)`; per duty DISCHARGED, DISCHARGED_LATE, PENDING; `None` -> UNSETTLED
+- `settle(admitted, discharges, *, decided_at, now) -> Settled(status, ok, outstanding, late, unmatched)`; per duty DISCHARGED, DISCHARGED_LATE, PENDING, OVERDUE; `None` -> UNSETTLED
 - `Obligation(id, type, mandatory=True, deadline_s=None)`, `Declaration(pep, supports, unsupported)`, `Discharge(obligation_id, at)`; determinations carry `.options`
 
 ## Family
@@ -38,6 +38,10 @@ Assurance artifact, pillar "attached duties" of [governance-certification](https
 ## Status
 
 0.1.0 · 36 tests · 21 conformance vectors · Python ≥ 3.10
+
+## How this is made
+
+The code and documentation are written with Loomground agents. The maintainer reads and corrects all of it.
 
 ## License
 

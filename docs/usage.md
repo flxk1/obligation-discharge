@@ -48,6 +48,8 @@ Once the gateway declares the missing capability the permit is admissible, and
 the duties are owed. Afterwards, an audit job asks whether they were performed:
 
 ```python
+gateway = Declaration("api-gateway", supports={"urn:log:access", "urn:notify:ciso"})
+decided = admit(duties, gateway)
 settled = settle(
     decided,
     [Discharge("ob-1", "2026-03-01T10:01:30Z")],
